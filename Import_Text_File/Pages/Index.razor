@@ -1,0 +1,30 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor.RichTextEditor
+@using Syncfusion.Blazor.Buttons
+@using System.IO
+@using System.Text
+
+<SfButton OnClick="@importStream">Import Text Data</SfButton>
+<SfRichTextEditor ID="defalt_RTE" @ref="RteObj" @bind-Value="@rteValue" EnableHtmlSanitizer="false">
+</SfRichTextEditor>
+
+@code {
+    SfRichTextEditor RteObj;
+    public string text { get; set; }
+    private string rteValue { get; set; } = "<p>Click the button to import text file</p>";
+    private string HtmlString { get; set; }
+    private string PathToHTMLFile = Path.GetFullPath(Directory.GetCurrentDirectory() + @"\wwwroot\RTESample.txt");
+
+    public void importStream()
+    {
+        using (FileStream fs = File.Open(PathToHTMLFile, FileMode.Open, FileAccess.ReadWrite))
+        {
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                HtmlString = sr.ReadToEnd();
+                this.rteValue = HtmlString;
+            }
+        }
+    }
+}
